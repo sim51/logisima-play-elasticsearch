@@ -31,7 +31,7 @@ import play.modules.elasticsearch.annotation.ESearchIndexed;
 public class ESearchUtils {
 
     /** The IGNOR e_ fields. */
-    static List<String> IGNORE_FIELDS  = new ArrayList<String>();
+    static List<String>         IGNORE_FIELDS  = new ArrayList<String>();
     static {
         IGNORE_FIELDS.add("avoidCascadeSaveLoops");
         IGNORE_FIELDS.add("willBeSaved");
@@ -43,8 +43,8 @@ public class ESearchUtils {
      * Default constant
      */
     public static final float   BOOST_NORMAL   = (float) 1.0;
-    public static final boolean STORE          = true;
-    public static final boolean INDEX          = true;
+    public static final boolean STORE          = false;
+    public static final String  INDEX          = "not_analyzed";
     public static final boolean INCLUDE_IN_ALL = true;
 
     /**

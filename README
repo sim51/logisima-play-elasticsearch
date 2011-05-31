@@ -1,1 +1,9 @@
-This module allow you to plug your application with an elasticsearch server
+This module allow you to plug your application with an elasticsearch server.
+
+TODO :
+  * MAPPING
+    - ManyToMany -> index children object with parent
+    - OneToMany & ManyToOne -> use _parent mapping on child 
+    - OneToOne -> use _parent mapping on the object without "mappedBy"
+  * Conf
+    - What can I do for shards and _parent ?

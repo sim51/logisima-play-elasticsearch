@@ -37,7 +37,11 @@ public @interface ESearchField {
 
     boolean store() default ESearchUtils.STORE;
 
-    boolean index() default ESearchUtils.INDEX;
+    /**
+     * 
+     * analyzed (default) or not_analyzed
+     */
+    String index() default ESearchUtils.INDEX;
 
     boolean include_in_all() default ESearchUtils.INCLUDE_IN_ALL;
 
@@ -47,6 +51,6 @@ public @interface ESearchField {
      * attachment
      * 
      */
-    String type() default "string";
+    String type();
 
 }
