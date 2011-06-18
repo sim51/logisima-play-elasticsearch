@@ -87,8 +87,7 @@ public class ESearch {
     /**
      * Method to add the object to the elasticsearch index.
      * 
-     * @param object
-     *            the object to index
+     * @param object the object to index
      */
     public static void index(Object object) {
         Logger.debug("[ESearch]: Start to index object " + object);
@@ -110,8 +109,7 @@ public class ESearch {
     /**
      * Method to delete the object from the SolR index.
      * 
-     * @param object
-     *            the object to unindex
+     * @param object the object to unindex
      */
     public static void unIndex(Object object) {
         Logger.info("[ESearch]: Start to delete object " + object);
