@@ -49,7 +49,7 @@ public class EsearchConvertorUtils {
 
         try {
             xContent = XContentFactory.jsonBuilder().startObject();
-            // for all fields into the object with the SolRField annotation, we
+            // for all fields into the object with the ESearchField annotation, we
             // added it into the solr document
             for (java.lang.reflect.Field field : object.getClass().getFields()) {
                 ESearchFieldIgnore ESearchFieldIgnore = field.getAnnotation(ESearchFieldIgnore.class);
@@ -58,7 +58,7 @@ public class EsearchConvertorUtils {
                 // if field is not ignore and it's not a complexe type
                 if (ESearchFieldIgnore == null && !field.getType().isArray()
                         && !field.getType().isAssignableFrom(Collection.class)
-                        && (ESearchUtils.IGNORE_FIELDS.contains(name) == false)) {
+                        && (ESearchConstant.IGNORE_FIELDS.contains(name) == false)) {
 
                     Logger.debug("[ESearch]: Indexing field " + name);
                     String value = null;

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with LogiSima-play-elasticsearch.  If not, see <http://www.gnu.org/licenses/>.
  */
-package play.modules.elasticsearch;
+package play.modules.elasticsearch.indexing;
 
 import java.util.List;
 
@@ -42,7 +42,7 @@ import play.modules.elasticsearch.utils.EsearchConvertorUtils;
  * @author bsimard
  * 
  */
-public class ESearch {
+public class ESearchIndexing {
 
     /**
      * elasticsearch client.

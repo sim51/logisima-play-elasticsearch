@@ -21,7 +21,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import play.modules.elasticsearch.utils.ESearchUtils;
+import play.modules.elasticsearch.utils.ESearchConstant;
 
 /**
  * The ESearchFieldIgnore annotation.
@@ -33,17 +33,17 @@ import play.modules.elasticsearch.utils.ESearchUtils;
 @Target(ElementType.FIELD)
 public @interface ESearchField {
 
-    float boost() default ESearchUtils.BOOST_NORMAL;
+    float boost() default ESearchConstant.BOOST_NORMAL;
 
-    boolean store() default ESearchUtils.STORE;
+    boolean store() default ESearchConstant.STORE;
 
     /**
      * 
      * analyzed (default) or not_analyzed
      */
-    String index() default ESearchUtils.INDEX;
+    String index() default ESearchConstant.INDEX;
 
-    boolean include_in_all() default ESearchUtils.INCLUDE_IN_ALL;
+    boolean include_in_all() default ESearchConstant.INCLUDE_IN_ALL;
 
     /**
      * 

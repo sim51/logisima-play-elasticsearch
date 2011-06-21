@@ -14,17 +14,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with LogiSima-play-elasticsearch.  If not, see <http://www.gnu.org/licenses/>.
  */
-package play.modules.elasticsearch.utils;
+package play.modules.elasticsearch.mapping;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Entity;
 
 import play.Logger;
 import play.modules.elasticsearch.annotation.ESearchField;
 import play.modules.elasticsearch.exception.ESearchException;
+import play.modules.elasticsearch.exception.ESearchMappingComplexTypeException;
+import play.modules.elasticsearch.utils.ESearchConstant;
 import antlr.collections.List;
 
 /**
@@ -59,15 +63,20 @@ public class ESearchMappingUtils {
         if (esearchField != null | indexedAllFields) {
 
             mapping = "\t\t\t\t\t\"" + field.getName() + "\" : {";
+
             // mapping for field
-            mapping += "\"type\" : \"" + ESearchMappingUtils.getESearchType(field) + "\"";
+            try {
+                mapping += "\"type\" : \"" + ESearchMappingUtils.getESearchType(field) + "\"";
+            } catch (ESearchMappingComplexTypeException e) {
+                mapping += "\n" + e.getMessage();
+            }
 
             // if annotation is specified
             if (esearchField != null) {
-                if (esearchField.boost() != ESearchUtils.BOOST_NORMAL) {
+                if (esearchField.boost() != ESearchConstant.BOOST_NORMAL) {
                     mapping += ", \"boost\" : \"" + esearchField.boost() + "\"";
                 }
-                if (esearchField.index() != ESearchUtils.INDEX) {
+                if (esearchField.index() != ESearchConstant.INDEX) {
                     mapping += ", \"index\" : \"analyzed\"";
                 }
                 if (esearchField.store()) {
@@ -101,35 +110,58 @@ public class ESearchMappingUtils {
         }
         // here we guess
         else {
-            // boolean
-            if (Boolean.class == field.getType() || boolean.class == field.getType()) {
-                type = "boolean";
-            }
-            // integer
-            if (Integer.class == field.getType() || int.class == field.getType() || short.class == field.getType()
-                    || long.class == field.getType()) {
-                type = "integer";
-            }
-            // float
-            if (float.class == field.getType() || Double.class == field.getType()) {
-                type = "float";
-            }
-            // date
-            if (Date.class == field.getType() || Double.class == field.getType()) {
-                type = "date";
-            }
+
+            type = ESearchMappingUtils.java2ESearchType(field.getType());
+
             // list or map
-            if (List.class == field.getType() || Map.class == field.getType()) {
+            if (type.equals("array")) {
+                String message = "\t\t\t\t\t\t\"properties\" : { \n";
+                Type typ = field.getGenericType();
+                if (typ instanceof ParameterizedType) {
+                    ParameterizedType pt = (ParameterizedType) typ;
+                    for (Type t : pt.getActualTypeArguments()) {
+                        message += "\t\t\t\t\t\t\t\"" + t + "\" { \"type\": \""
+                                + ESearchMappingUtils.java2ESearchType(t.getClass()) + "\"}";
+                    }
+                    // we throw a specific exception that will be catch and threat upper (a bubble message).
+                    throw new ESearchMappingComplexTypeException(message);
+                }
+                else {
+                    throw new ESearchException("Unable to do mapping for field " + field.getName());
+                }
+            }
+        }
 
-            }
-            // JPA Object
-            if (Entity.class == field.getType()) {
+        return type;
+    }
 
-            }
-            // default value
-            if (type == null) {
-                type = "string";
-            }
+    public static String java2ESearchType(Class clazz) {
+        String type = "string";
+
+        // boolean
+        if (Boolean.class == clazz || boolean.class == clazz) {
+            type = "boolean";
+        }
+        // integer
+        if (Integer.class == clazz || int.class == clazz || short.class == clazz || long.class == clazz) {
+            type = "integer";
+        }
+        // float
+        if (float.class == clazz || Double.class == clazz) {
+            type = "float";
+        }
+        // date
+        if (Date.class == clazz || Double.class == clazz) {
+            type = "date";
+        }
+        // list or map
+        if (List.class == clazz || Set.class == clazz) {
+            type = "array";
+        }
+
+        // JPA Object
+        if (Entity.class == clazz) {
+            type = "string"; // for "modelName_id"
         }
 
         return type;

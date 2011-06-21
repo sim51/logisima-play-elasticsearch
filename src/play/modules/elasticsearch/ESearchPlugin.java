@@ -1,7 +1,7 @@
 /**
  *  This file is part of LogiSima-play-elasticsearch.
  *
- *  LogiSima-play-solr is free software: you can redistribute it and/or modify
+ *  LogiSima-play-elasticsearch is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
@@ -17,9 +17,12 @@
 package play.modules.elasticsearch;
 
 import play.PlayPlugin;
+import play.classloading.ApplicationClasses.ApplicationClass;
+import play.modules.elasticsearch.indexing.ESearchIndexing;
+import play.modules.elasticsearch.searching.ESearchModelEnhancer;
 
 /**
- * Integrate the Elasticsearch module to the play lifecycle, for catching event on JPDA Object.
+ * Integrate the Elasticsearch module to the play lifecycle.
  * 
  * @author bsimard
  * 
@@ -28,7 +31,7 @@ public class ESearchPlugin extends PlayPlugin {
 
     @Override
     public void onApplicationStart() {
-        ESearch.init();
+        ESearchIndexing.init();
     }
 
     @Override
@@ -36,12 +39,17 @@ public class ESearchPlugin extends PlayPlugin {
         if (!message.startsWith("JPASupport"))
             return;
         if (message.equals("JPASupport.objectPersisted") || message.equals("JPASupport.objectUpdated")) {
-            ESearch.index(context);
+            ESearchIndexing.index(context);
         }
         else
             if (message.equals("JPASupport.objectDeleted")) {
-                ESearch.unIndex(context);
+                ESearchIndexing.unIndex(context);
             }
+    }
+
+    @Override
+    public void enhance(ApplicationClass appClass) throws Exception {
+        new ESearchModelEnhancer().enhanceThisClass(appClass);
     }
 
 }
