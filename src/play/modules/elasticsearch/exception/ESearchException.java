@@ -25,7 +25,7 @@ package play.modules.elasticsearch.exception;
 public class ESearchException extends Exception {
 
     /**
-     * serialUID
+     * serialUID.
      */
     private static final long serialVersionUID = 8900000567753471797L;
 

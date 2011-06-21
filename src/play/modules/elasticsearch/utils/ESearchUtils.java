@@ -17,8 +17,6 @@
 package play.modules.elasticsearch.utils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Id;
 
@@ -34,23 +32,6 @@ import play.modules.elasticsearch.annotation.ESearchIndexed;
  * 
  */
 public class ESearchUtils {
-
-    /** The IGNOR e_ fields. */
-    static List<String>         IGNORE_FIELDS  = new ArrayList<String>();
-    static {
-        IGNORE_FIELDS.add("avoidCascadeSaveLoops");
-        IGNORE_FIELDS.add("willBeSaved");
-        IGNORE_FIELDS.add("serialVersionId");
-        IGNORE_FIELDS.add("serialVersionUID");
-    }
-
-    /**
-     * Default constant
-     */
-    public static final float   BOOST_NORMAL   = (float) 1.0;
-    public static final boolean STORE          = false;
-    public static final String  INDEX          = "not_analyzed";
-    public static final boolean INCLUDE_IN_ALL = true;
 
     /**
      * Method to get the index
@@ -93,7 +74,7 @@ public class ESearchUtils {
     }
 
     /**
-     * Method that return an indeitifer for the object.
+     * Method that return an indentifer for the object.
      * 
      * @param Object
      * @return the id field value
